@@ -1,27 +1,31 @@
-本文档是开发类文档，如需部署小智服务端，[点击这里查看部署教程](../../README.md#%E9%83%A8%E7%BD%B2%E6%96%87%E6%A1%A3)
+# Документация для разработчиков
 
-# xiaozhi
+> **Примечание:** Этот документ предназначен для разработчиков.  
+> Для развертывания сервера Xiaozhi [перейдите к руководству по развертыванию](../../README.md#%D0%B4%D0%B5%D0%BF%D0%BB%D0%BE%D0%B9-%D0%B8-%D1%83%D1%81%D1%82%D0%B0%D0%BD%D0%BE%D0%B2%D0%BA%D0%B0).
 
-## Project setup
+---
 
-开发使用代码编辑器，导入项目时，选择`manager-web`文件夹作为项目目录
+## xiaozhi
 
-```
+### Настройка проекта
+
+При разработке используйте редактор кода. При импорте проекта выберите папку `manager-web` в качестве корневого каталога.
+
+```bash
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Компиляция с горячей перезагрузкой для разработки
 
-```
+```bash
 npm run serve
 ```
 
-### Compiles and minifies for production
 
-```
+Сборка для продакшена (минификация)
+
+```bash
 npm run build
 ```
 
-### Customize configuration
 
-See [Configuration Reference](https://cli.vuejs.org/config/).
