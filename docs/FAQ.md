@@ -1,107 +1,140 @@
-# 常见问题 ❓
+Часто задаваемые вопросы
 
-### 1、为什么我说的话，小智识别出来很多韩文、日文、英文？🇰🇷
+# Часто задаваемые вопросы ❓
 
-建议：检查一下`models/SenseVoiceSmall`是否已经有`model.pt`
-文件，如果没有就要下载，查看这里[下载语音识别模型文件](Deployment.md#模型文件)
+### 1\. Почему мои слова часто распознаются как корейский, японский или английский? 🇰🇷
 
-### 2、为什么会出现"TTS 任务出错 文件不存在"？📁
+**Рекомендация:** Проверьте, есть ли в папке `models/SenseVoiceSmall` файл `model.pt`. Если его нет — скачайте его: [Скачать файл модели для распознавания речи](Deployment.md#模型文件)
 
-建议：检查一下是否正确使用`conda` 安装了`libopus`和`ffmpeg`库。
+### 2\. Почему появляется ошибка "TTS задача не выполнена, файл не существует"? 📁
 
-如果没有安装，就安装
+**Рекомендация:** Проверьте, установлены ли библиотеки `libopus` и `ffmpeg` через `conda`.  
+Если не установлены, выполните:
 
-```
 conda install conda-forge::libopus
 conda install conda-forge::ffmpeg
-```
 
-### 3、TTS 经常失败，经常超时 ⏰
+### 3\. TTS часто не работает или превышает время ожидания ⏰
 
-建议：如果 `EdgeTTS` 经常失败，请先检查是否使用了代理（梯子）。如果使用了，请尝试关闭代理后再试；  
-如果用的是火山引擎的豆包 TTS，经常失败时建议使用付费版本，因为测试版本仅支持 2 个并发。
+**Рекомендация:** Если часто не работает `EdgeTTS`, сначала проверьте, используете ли вы прокси (VPN). Если да — попробуйте отключить и повторить попытку.  
+Если используете Doubao TTS от Volcengine и часто возникают сбои, рекомендуется перейти на платную версию (тестовая поддерживает только 2 одновременных подключения).
 
-### 4、使用Wifi能连接自建服务器，但是4G模式却接不上 🔐
+### 4\. Через Wi-Fi сервер подключается, а через 4G — нет 🔐
 
-原因：虾哥的固件，4G模式需要使用安全连接。
+**Причина:** Прошивка XiaGe требует защищённого соединения в 4G режиме.  
+**Решения (выберите одно):**
 
-解决方法：目前有两种方法可以解决。任选一种：
+1.  Изменить код. Смотрите видео: [https://www.bilibili.com/video/BV18MfTYoE85](https://www.bilibili.com/video/BV18MfTYoE85)
+2.  Настроить SSL-сертификат через nginx. Инструкция: [https://icnt94i5ctj4.feishu.cn/docx/GnYOdMNJOoRCljx1ctecsj9cnRe](https://icnt94i5ctj4.feishu.cn/docx/GnYOdMNJOoRCljx1ctecsj9cnRe)
 
-1、改代码。参考这个视频解决 https://www.bilibili.com/video/BV18MfTYoE85
+### 5\. Как ускорить отклик XiaoZhi? ⚡
 
-2、使用nginx配置ssl证书。参考教程 https://icnt94i5ctj4.feishu.cn/docx/GnYOdMNJOoRCljx1ctecsj9cnRe
+Проект по умолчанию настроен на минимальные издержки — начните с бесплатных моделей, чтобы убедиться, что "работает", а затем оптимизируйте скорость.  
+С версии `0.5.2` поддерживается потоковая конфигурация, что ускоряет отклик примерно на 2,5 секунды.
 
-### 5、如何提高小智对话响应速度？ ⚡
+Модуль
 
-本项目默认配置为低成本方案，建议初学者先使用默认免费模型，解决"跑得动"的问题，再优化"跑得快"。  
-如需提升响应速度，可尝试更换各组件。自`0.5.2`版本起，项目支持流式配置，相比早期版本，响应速度提升约`2.5秒`，显著改善用户体验。
+Бесплатная настройка
 
-| 模块名称 | 入门全免费设置 | 流式配置 |
-|:---:|:---:|:---:|
-| ASR(语音识别) | FunASR(本地) | 👍XunfeiStreamASR(讯飞流式) |
-| LLM(大模型) | glm-4-flash(智谱) | 👍qwen-flash(阿里百炼) |
-| VLLM(视觉大模型) | glm-4v-flash(智谱) | 👍qwen3.5-flash(阿里百炼) |
-| TTS(语音合成) | EdgeTTS(微软) | 👍HuoshanDoubleStreamTTS(火山流式) |
-| Intent(意图识别) | function_call(函数调用) | function_call(函数调用) |
-| Memory(记忆功能) | mem_local_short(本地短期记忆） | mem_local_short（本地短期记忆） |
+Потоковая настройка
 
-如果您关心各组件的耗时，请查阅[小智各组件性能测试报告](https://github.com/xinnan-tech/xiaozhi-performance-research)，可按报告中的测试方法在您的环境中实际测试。
+ASR (Распознавание речи)
 
-### 6、我说话很慢，停顿时小智老是抢话 🗣️
+FunASR (локально)
 
-建议：在配置文件中找到如下部分，将 `min_silence_duration_ms` 的值调大（例如改为 `1000`）：
+👍XunfeiStreamASR (iFlytek потоково)
 
-```yaml
+LLM (Большая модель)
+
+glm-4-flash (Zhipu)
+
+👍qwen-flash (Alibaba Baichuan)
+
+VLLM (Визуальная модель)
+
+glm-4v-flash (Zhipu)
+
+👍qwen3.5-flash (Alibaba Baichuan)
+
+TTS (Синтез речи)
+
+EdgeTTS (Microsoft)
+
+👍HuoshanDoubleStreamTTS (Volcano потоково)
+
+Intent (Распознавание намерений)
+
+function\_call (вызов функций)
+
+function\_call (вызов функций)
+
+Memory (Память)
+
+mem\_local\_short (локальная краткосрочная)
+
+mem\_local\_short (локальная краткосрочная)
+
+Для измерения времени работы компонентов смотрите [отчёт о производительности XiaoZhi](https://github.com/xinnan-tech/xiaozhi-performance-research) и тестируйте в своей среде.
+
+### 6\. Я говорю медленно, а XiaoZhi постоянно меня перебивает 🗣️
+
+**Рекомендация:** В конфиге найдите такой фрагмент и увеличьте значение `min_silence_duration_ms` (например, до `1000`):
+
 VAD:
   SileroVAD:
     threshold: 0.5
-    model_dir: models/snakers4_silero-vad
-    min_silence_duration_ms: 700  # 如果说话停顿较长，可将此值调大
-```
+    model\_dir: models/snakers4\_silero-vad
+    min\_silence\_duration\_ms: 700  # Если паузы в речи длинные, увеличьте это значение
 
-### 7、部署相关教程
-1、[如何进行最简化部署](./Deployment.md)<br/>
-2、[如何进行全模块部署](./Deployment_all.md)<br/>
-3、[如何部署MQTT网关开启MQTT+UDP协议](./mqtt-gateway-integration.md)<br/>
-4、[如何自动拉取本项目最新代码自动编译和启动](./dev-ops-integration.md)<br/>
-5、[如何与Nginx集成](https://github.com/xinnan-tech/xiaozhi-esp32-server/issues/791)<br/>
-6、[修改代码后怎么编译自己的Docker镜像](./docker-build.md)<br/>
+### 7\. Руководства по развертыванию
 
-### 8、编译固件相关教程
-1、[如何自己编译小智固件](./firmware-build.md)<br/>
-2、[如何基于虾哥编译好的固件修改OTA地址](./firmware-setting.md)<br/>
-3、[单模块部署如何配置固件OTA自动升级](./ota-upgrade-guide.md)<br/>
+1.  [Минимальная установка](./Deployment.md)
+2.  [Полная установка всех модулей](./Deployment_all.md)
+3.  [Настройка шлюза MQTT + UDP](./mqtt-gateway-integration.md)
+4.  [Автоматическое обновление и запуск кода](./dev-ops-integration.md)
+5.  [Интеграция с Nginx](https://github.com/xinnan-tech/xiaozhi-esp32-server/issues/791)
+6.  [Сборка собственного Docker-образа](./docker-build.md)
 
-### 9、拓展相关教程
-1、[如何开启手机号码注册智控台](./ali-sms-integration.md)<br/>
-2、[如何集成HomeAssistant实现智能家居控制](./homeassistant-integration.md)<br/>
-3、[如何开启视觉模型实现拍照识物](./mcp-vision-integration.md)<br/>
-4、[如何部署MCP接入点](./mcp-endpoint-enable.md)<br/>
-5、[如何接入MCP接入点](./mcp-endpoint-integration.md)<br/>
-6、[MCP方法如何获取设备信息](./mcp-get-device-info.md)<br/>
-7、[如何开启声纹识别](./voiceprint-integration.md)<br/>
-8、[新闻插件源配置指南](./newsnow_plugin_config.md)<br/>
-9、[知识库ragflow集成指南](./ragflow-integration.md)<br/>
-10、[如何部署上下文源](./context-provider-integration.md)<br/>
-11、[如何集成PowerMem智能记忆](./powermem-integration.md)<br/>
-12、[如何配置天气插件查询天气](./weather-integration.md)<br/>
-13、[如何开启设备呼叫插件](./device-call-guide.md)<br/>
-14、[如何开启联网搜索功能](./web-search-integration.md)<br/>
+### 8\. Руководства по сборке прошивки
 
-### 10、数字人相关教程
-1、[数字人digital-human启动方法](./digital-human-wakeword.md)<br/>
-2、[如何在N100迷你主机上部署数字人digital-human](./all-in-one-digital-human-setup.md)<br/>
+1.  [Сборка прошивки XiaoZhi](./firmware-build.md)
+2.  [Изменение OTA-адреса на основе прошивки XiaGe](./firmware-setting.md)
+3.  [Настройка автообновления OTA для одного модуля](./ota-upgrade-guide.md)
 
-### 11、语音克隆、本地语音部署相关教程
-1、[如何在智控台克隆音色](./huoshan-streamTTS-voice-cloning.md)<br/>
-2、[如何部署集成index-tts本地语音](./index-stream-integration.md)<br/>
-3、[如何部署集成fish-speech本地语音](./fish-speech-integration.md)<br/>
-4、[如何部署集成PaddleSpeech本地语音](./paddlespeech-deploy.md)<br/>
+### 9\. Руководства по расширениям
 
-### 12、性能测试教程
-1、[各组件速度测试指南](./performance_tester.md)<br/>
-2、[定期公开测试结果](https://github.com/xinnan-tech/xiaozhi-performance-research)<br/>
+1.  [Включение регистрации по номеру телефона](./ali-sms-integration.md)
+2.  [Интеграция с HomeAssistant для умного дома](./homeassistant-integration.md)
+3.  [Включение визуальных моделей для распознавания объектов](./mcp-vision-integration.md)
+4.  [Развертывание точки доступа MCP](./mcp-endpoint-enable.md)
+5.  [Интеграция с точкой доступа MCP](./mcp-endpoint-integration.md)
+6.  [Получение информации об устройстве через MCP](./mcp-get-device-info.md)
+7.  [Включение голосовой биометрии](./voiceprint-integration.md)
+8.  [Настройка новостного плагина](./newsnow_plugin_config.md)
+9.  [Интеграция базы знаний ragflow](./ragflow-integration.md)
+10.  [Развертывание источников контекста](./context-provider-integration.md)
+11.  [Интеграция PowerMem для интеллектуальной памяти](./powermem-integration.md)
+12.  [Настройка погодного плагина](./weather-integration.md)
+13.  [Включение плагина вызова устройств](./device-call-guide.md)
+14.  [Включение поиска в интернете](./web-search-integration.md)
 
-### 13、更多问题，可联系我们反馈 💬
+### 10\. Руководства по цифровому человеку
 
-可以在[issues](https://github.com/xinnan-tech/xiaozhi-esp32-server/issues)提交您的问题。
+1.  [Запуск digital-human](./digital-human-wakeword.md)
+2.  [Развертывание digital-human на мини-ПК N100](./all-in-one-digital-human-setup.md)
+
+### 11\. Клонирование и локальный синтез речи
+
+1.  [Клонирование голоса через консоль управления](./huoshan-streamTTS-voice-cloning.md)
+2.  [Интеграция index-tts для локального синтеза](./index-stream-integration.md)
+3.  [Интеграция fish-speech для локального синтеза](./fish-speech-integration.md)
+4.  [Интеграция PaddleSpeech для локального синтеза](./paddlespeech-deploy.md)
+
+### 12\. Руководства по тестированию производительности
+
+1.  [Тестирование скорости компонентов](./performance_tester.md)
+2.  [Публичные результаты тестов](https://github.com/xinnan-tech/xiaozhi-performance-research)
+
+### 13\. Остались вопросы? Свяжитесь с нами 💬
+
+Оставьте ваш вопрос в [issues](https://github.com/xinnan-tech/xiaozhi-esp32-server/issues).
